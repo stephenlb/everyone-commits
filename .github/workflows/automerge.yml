@@ -1,4 +1,4 @@
-name: Auto-merge and clean up branches
+name: Auto-merge and clean branches
 
 on:
   pull_request_target:
@@ -9,11 +9,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  merge-and-clean:
+  auto-merge:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check blacklisted folders
+      - name: Check blacklist
         id: blacklist
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -29,12 +29,64 @@ jobs:
           echo "Changed files:"
           echo "$FILES"
 
-          for FOLDER in "${BLACKLIST[@]}"; do
-            if echo "$FILES" | grep -q "^$FOLDER"; then
-              echo "PR modifies blacklisted folder: $FOLDER"
+          for BLOCKED in "${BLACKLIST[@]}"; do
+            if echo "$FILES" | grep -q "^$BLOCKED"; then
+              echo "Blocked folder changed: $BLOCKED"
               echo "blocked=true" >> "$GITHUB_OUTPUT"
               exit 0
             fi
+          done
+
+          echo "blocked=false" >> "$GITHUB_OUTPUT"
+
+      - name: Close blocked PR
+        if: steps.blacklist.outputs.blocked == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr close "${{ github.event.pull_request.number }}" \
+            --repo "${{ github.repository }}" \
+            --comment "PR closed automatically: modifying protected folders is not allowed."
+
+          exit 1
+
+      - name: Merge pull request
+        id: merge
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge "${{ github.event.pull_request.number }}" \
+            --merge \
+            --repo "${{ github.repository }}"
+
+      - name: Delete merged branch
+        if: >-
+          steps.merge.outcome == 'success' &&
+          github.event.pull_request.head.repo.full_name == github.repository
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          DEFAULT="${{ github.event.repository.default_branch }}"
+
+          if [ "$BRANCH" = "$DEFAULT" ]; then
+            echo "Cannot delete default branch."
+            exit 0
+          fi
+
+          gh api \
+            --method DELETE \
+            "repos/${{ github.repository }}/git/refs/heads/$BRANCH" \
+            && echo "Deleted branch: $BRANCH" \
+            || echo "Branch already deleted."
+
+      - name: Report fork branch
+        if: >-
+          steps.merge.outcome == 'success' &&
+          github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "Merged successfully. Fork branch left untouched."            fi
           done
 
           echo "blocked=false" >> "$GITHUB_OUTPUT"
