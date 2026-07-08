@@ -51,7 +51,7 @@ jobs:
           exit 1
 
       - name: Merge pull request
-        id: merge
+        id: merge_pr
         continue-on-error: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -62,7 +62,7 @@ jobs:
 
       - name: Delete merged branch
         if: >-
-          steps.merge.outcome == 'success' &&
+          steps.merge_pr.outcome == 'success' &&
           github.event.pull_request.head.repo.full_name == github.repository
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -83,51 +83,7 @@ jobs:
 
       - name: Report fork branch
         if: >-
-          steps.merge.outcome == 'success' &&
+          steps.merge_pr.outcome == 'success' &&
           github.event.pull_request.head.repo.full_name != github.repository
         run: |
-          echo "Merged successfully. Fork branch left untouched."            fi
-          done
-
-          echo "blocked=false" >> "$GITHUB_OUTPUT"
-
-      - name: Close PR if blacklisted files changed
-        if: steps.blacklist.outputs.blocked == 'true'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr close "${{ github.event.pull_request.number }}" \
-            --repo "${{ github.repository }}" \
-            --comment "This PR was automatically closed because it modifies a protected folder."
-
-          exit 1
-
-      - name: Merge the pull request
-        id: merge
-        continue-on-error: true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr merge "${{ github.event.pull_request.number }}" \
-            --merge \
-            --repo "${{ github.repository }}"
-
-      - name: Note why it wasn't merged
-        if: steps.merge.outcome != 'success'
-        run: |
-          echo "PR could not be merged."
-
-      - name: Delete source branch
-        if: >-
-          steps.merge.outcome == 'success' &&
-          github.event.pull_request.head.repo.full_name == github.repository
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
-          DEFAULT_BRANCH="${{ github.event.repository.default_branch }}"
-
-          if [ "$BRANCH" != "$DEFAULT_BRANCH" ]; then
-            gh api -X DELETE \
-              "repos/${{ github.repository }}/git/refs/heads/$BRANCH" || true
-          fi
+          echo "Merged successfully. Fork branch left untouched."
