@@ -1,16 +1,15 @@
 import videos
+import database
 from fastapi import FastAPI
 
 app = FastAPI()
 
 @app.get("/")
-async def read_root():
+async def root():
     video = videos.Video()
+    connection = database.connect()
     print(video)
     return {"Hello": "World"}
-
-
-
 
 ## TODO Upload Videos
 ## -> sign URL for S3 direct upload
