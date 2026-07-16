@@ -7,7 +7,9 @@ app = FastAPI()
 @app.get("/")
 async def root():
     video = videos.Video()
-    connection = database.connect()
+    video.id = "akljdflas"
+    video.kljavlksjalkj = "akljdflas"
+    connection = database.setup()
     print(video)
     return {"Hello": "World"}
 
