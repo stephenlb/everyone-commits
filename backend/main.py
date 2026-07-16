@@ -7,17 +7,15 @@ app = FastAPI()
 @app.get("/")
 async def root():
     videos.setup()
-    #video = videos.Video()
-    #video.id = "akljdflas"
-    #video.kljavlksjalkj = "akljdflas"
-    #connection = video.setup()
     videos.insert("Hello", "World")
     return {"Beep": "Boop"}
 
 @app.post("/video")
-async def video():
-    return {"status": "success"}
-    
+async def video(body: dict):
+    return {
+        "status": "success",
+        "body": body,
+    }
 
 ## TODO Upload Videos
 ## -> sign URL for S3 direct upload
