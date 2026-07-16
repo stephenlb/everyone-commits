@@ -31,6 +31,7 @@ def insert(title: str, description: str):
         (id, title, description),
     )
 
+#@dataclass
 class Video():
     id: str = ""
     upload_date: int = 0

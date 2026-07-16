@@ -12,7 +12,12 @@ async def root():
     #video.kljavlksjalkj = "akljdflas"
     #connection = video.setup()
     videos.insert("Hello", "World")
-    return {"Hello": "World"}
+    return {"Beep": "Boop"}
+
+@app.post("/video")
+async def video():
+    return {"status": "success"}
+    
 
 ## TODO Upload Videos
 ## -> sign URL for S3 direct upload
