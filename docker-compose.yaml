@@ -1,6 +1,7 @@
 services:
   datababase:
-    image: postgres:18-alpine
+    # image: postgres:18-alpine
+    image: pgvector/pgvector:pg18-trixie
     environment:
       - POSTGRES_PASSWORD=youtube
       - POSTGRES_USER=youtube
@@ -9,7 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql
-    command: sh -c "echo"
 
 volumes:
   db_data:
