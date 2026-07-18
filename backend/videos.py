@@ -1,3 +1,7 @@
+from pathlib import Path
+import shutil
+
+from fastapi import UploadFile
 import database
 import uuid_utils as uuid
 
@@ -33,11 +37,12 @@ def setup():
     return database.query(SCHEMA)
     
 def insert(title: str, description: str):
-    id = str(uuid.uuid7())
-    return database.execute(
+    video_id = str(uuid.uuid7())
+    database.execute(
         INSERT_VIDEO,
-        (id, title, description),
+        (video_id, title, description),
     )
+    return video_id
 
 #@dataclass
 #class Video():
@@ -48,33 +53,23 @@ def insert(title: str, description: str):
 #    views: int = 0
 #    likes: int = 0
 
-async def fetch(video_id: int):
-    pass
-
 def search(query: str, limit: int = 1):
     return database.query(
         QUERY_VIDEOS,
         (query, query, limit),
     )
 
-def upload():
-    """
-    import boto3
-    from fastapi import FastAPI, File, UploadFile
+UPLOAD_DIRECTORY = Path('data/videos')
+def upload(video_id: str, file: UploadFile):
+    filename = UPLOAD_DIRECTORY / f'{video_id}.mp4'
 
-    app = FastAPI()
-    s3 = boto3.client('s3')
+    #with open(filename, 'wb') as handle:
+    #    #shutil.copyfileobj(file.file, handle)
+    #    pass
 
-    BUCKET_NAME = "your-s3-bucket-name"
+    return filename, file.filename
 
-    @app.post("/upload-to-s3/")
-    async def upload_video_to_s3(file: UploadFile = File(...)):
-	# Stream the file directly from memory/temp disk to AWS S3
-	s3.upload_fileobj(file.file, BUCKET_NAME, file.filename)
-	
-	return {"message": f"Successfully uploaded {file.filename} to S3!"}
-    
-    """
 
-async def upload():
-    pass
+
+
+

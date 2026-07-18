@@ -31,13 +31,19 @@ DUCKDB
 We are building a YouTube App where you can upload videos,
 and viewers can watch your videos.
 
+## Stack
+Python FastAPI UVICorn Docerk
+Postgresql 
+
+
 ## Task Order
  - Friday 
     - ✅ List videos
     - ✅ POST Video Title Description
  - Saturday
     - Binary of Video
-    - 
+    - Self-hosting files
+    - PubNub Files hosting
  - Database
      - ✅ Postgresql in docker 
      - ✅ docker compose
@@ -49,6 +55,9 @@ and viewers can watch your videos.
 - Den-noh Coil
 
 ## Architecture Plan
+- Moderation
+    - remove bad words
+    - remove questionable videos
 - Research Mobile (optional)
     Flutter
     Capacitor

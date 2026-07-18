@@ -1,13 +1,11 @@
 import videos
 import database
-from fastapi import FastAPI
-
+from fastapi import FastAPI, UploadFile
 app = FastAPI()
 
 @app.get("/")
 async def root():
     videos.setup()
-    videos.insert("Hello", "World")
     return {"Beep": "Boop"}
 
 @app.get("/video")
@@ -15,16 +13,31 @@ async def video(query: str, limit: int = 2):
     results = videos.search(query, limit)
     return {"videos": results}
 
+## Video Container return Video ID
 @app.post("/video")
 async def video(body: dict):
     ## ARyzenCPU - ADD VALIDITION
     title = body['title']
     description = body['description']
-    videos.insert(title, description)
+    video_id = videos.insert(title, description)
     return {
-        "status": "success",
+        "id": video_id,
+    }
+
+@app.post("/upload")
+async def upload(
+    title: str,
+    description: str,
+    file: UploadFile,
+):
+    video_id = videos.insert(title, description)
+    new_name, original = videos.upload(video_id, file)
+    return {
+        "id": video_id,
         "title": title,
         "description": description,
+        "original" : original,
+        "name" : new_name,
     }
 
 ## TODO Upload Videos
