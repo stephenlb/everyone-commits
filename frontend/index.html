@@ -16,103 +16,124 @@
 }
 
 html, body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
+    margin:0;
+    width:100%;
+    height:100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    font-family: Inter, "Segoe UI", Arial, sans-serif;
-    color: white;
-    overflow: hidden;
-    position: relative;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:20px;
+    font-family:Inter,"Segoe UI",Arial,sans-serif;
+    color:white;
+    overflow:hidden;
+    position:relative;
 }
 
 body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: url("background.jpg") center/cover no-repeat;
-    filter: blur(10px);
-    transform: scale(1.08);
-    z-index: -2;
+    content:"";
+    position:fixed;
+    inset:0;
+    background:url("background.jpg") center/cover no-repeat;
+    filter:blur(10px);
+    transform:scale(1.08);
+    z-index:-2;
 }
 
 body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,.1);
-    z-index: -1;
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.1);
+    z-index:-1;
 }
 
 h1 {
-    margin: 0;
-    padding: clamp(8px,2vw,14px) clamp(16px,4vw,28px);
-    font-size: clamp(1.3rem,3vw,2rem);
-    border: 2px solid rgba(255,255,255,.2);
-    border-radius: var(--radius);
-    background: rgba(0,0,0,.35);
-    backdrop-filter: blur(12px);
+    margin:0;
+    padding:clamp(8px,2vw,14px) clamp(16px,4vw,28px);
+    font-size:clamp(1.3rem,3vw,2rem);
+    border:2px solid rgba(255,255,255,.2);
+    border-radius:var(--radius);
+    background:rgba(0,0,0,.35);
+    backdrop-filter:blur(12px);
 }
 
 video {
-    display: block;
-    max-width: calc(100vw - 40px);
-    max-height: calc(100vh - 190px);
-    background: black;
-    border: 2px solid rgba(255,255,255,.2);
-    border-radius: var(--radius);
-    object-fit: contain;
-    box-shadow: 0 20px 50px rgba(0,0,0,.55);
+    max-width:calc(100vw - 40px);
+    max-height:calc(100vh - 190px);
+    background:#000;
+    border:2px solid rgba(255,255,255,.2);
+    border-radius:var(--radius);
+    object-fit:contain;
+    box-shadow:0 20px 50px rgba(0,0,0,.55);
 }
 
 #custom-controls {
-    width: min(90vw,900px);
-    display: flex;
-    align-items: center;
-    gap: clamp(5px,1vw,12px);
-    padding: clamp(8px,1.5vw,14px);
-    background: rgba(0,0,0,.75);
-    border-radius: var(--radius);
-    backdrop-filter: blur(10px);
+    width:min(90vw,900px);
+    display:flex;
+    align-items:center;
+    gap:clamp(5px,1vw,12px);
+    padding:clamp(8px,1.5vw,14px);
+    background:rgba(0,0,0,.75);
+    border-radius:var(--radius);
+    backdrop-filter:blur(10px);
 }
 
-#custom-controls button {
-    min-width: clamp(35px,5vw,50px);
-    height: clamp(35px,5vw,50px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+button {
+    width:clamp(35px,5vw,50px);
+    height:clamp(35px,5vw,50px);
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
 
     background:#111;
     color:white;
     border:1px solid rgba(255,255,255,.2);
     border-radius:12px;
     cursor:pointer;
-    font-size:clamp(14px,2vw,20px);
+    font-size:clamp(14px,2vw,22px);
 }
 
 #videoSeek {
     flex:1;
-    min-width:50px;
+}
+
+#speedContainer {
+    position:relative;
+}
+
+#speedMenu {
+    display:none;
+    position:absolute;
+    bottom:60px;
+    right:0;
+
+    padding:12px;
+    background:#111;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:14px;
+
+    width:140px;
+}
+
+#speedMenu input {
+    width:100%;
+    padding:8px;
+    background:#000;
+    color:white;
+    border:1px solid rgba(255,255,255,.2);
+    border-radius:10px;
 }
 
 #speedText {
-    min-width:35px;
-    text-align:center;
-    font-size:clamp(12px,2vw,16px);
-}
-
-#speedButton {
-    font-size:22px;
+    font-size:14px;
 }
 </style>
+
 </head>
 
 <body>
@@ -121,61 +142,104 @@ video {
 
 <video id="player" autoplay></video>
 
+
 <div id="custom-controls">
-    <button onclick="videoSkip(-10)">−10</button>
-    <button onclick="videoToggle()">▶</button>
-    <button onclick="videoSkip(10)">+10</button>
+
+    <button id="playButton">▶</button>
 
     <input id="videoSeek" type="range" min="0" value="0" step="0.1">
 
-    <button id="speedButton" title="Playback speed">◷</button>
+
+    <div id="speedContainer">
+
+        <button id="speedButton" title="Playback speed">
+            ◷
+        </button>
+
+        <div id="speedMenu">
+            <input 
+                id="speedInput"
+                type="number"
+                min="0.1"
+                max="99"
+                step="0.1"
+                value="1">
+        </div>
+
+    </div>
+
     <span id="speedText">1x</span>
+
 </div>
 
 
+
 <script>
+
 const player = document.getElementById("player");
 const seek = document.getElementById("videoSeek");
+
+const playButton = document.getElementById("playButton");
+
 const speedButton = document.getElementById("speedButton");
+const speedMenu = document.getElementById("speedMenu");
+const speedInput = document.getElementById("speedInput");
 const speedText = document.getElementById("speedText");
 
 
-(async () => {
+
+(async()=>{
+
     const origin =
         window.location.protocol === "file:"
         ? "http://0.0.0.0:8000"
         : window.location.origin;
 
-    try {
-        const response = await fetch(`${origin}/video?query=Beep&limit=2`);
 
-        if (!response.ok)
-            throw new Error(`HTTP ${response.status}`);
+    try {
+
+        const response = await fetch(
+            `${origin}/video?query=Beep&limit=2`
+        );
 
         const videos = await response.json();
-
-        if (!videos.videos?.length)
-            throw new Error("No videos found");
 
         player.src =
             `${origin}/stream?video_id=${encodeURIComponent(videos.videos[0].id)}`;
 
+
     } catch(e) {
         console.error(e);
     }
+
 })();
 
 
-function videoSkip(seconds) {
-    player.currentTime += seconds;
-}
 
-function videoToggle() {
+function togglePlay(){
+
     if(player.paused)
         player.play();
+
     else
         player.pause();
+
 }
+
+
+playButton.onclick = togglePlay;
+
+
+
+player.addEventListener("play",()=>{
+    playButton.textContent="⏸";
+});
+
+
+player.addEventListener("pause",()=>{
+    playButton.textContent="▶";
+});
+
 
 
 player.addEventListener("loadedmetadata",()=>{
@@ -193,38 +257,62 @@ seek.addEventListener("input",()=>{
 });
 
 
-let speeds = [
-    0.1,0.25,0.5,1,
-    1.5,2,2.5,3,
-    5,10,25,50,99
-];
 
-let speedIndex = 3;
+// Speed dropdown
 
+speedButton.onclick=()=>{
 
-speedButton.onclick = () => {
-    speedIndex++;
+    speedMenu.style.display =
+        speedMenu.style.display === "block"
+        ? "none"
+        : "block";
 
-    if(speedIndex >= speeds.length)
-        speedIndex = 0;
-
-    player.playbackRate = speeds[speedIndex];
-    speedText.textContent = speeds[speedIndex] + "x";
 };
 
 
-document.addEventListener("keydown",(e)=>{
 
-    if(e.key==="ArrowRight")
-        videoSkip(10);
+speedInput.addEventListener("input",()=>{
 
-    if(e.key==="ArrowLeft")
-        videoSkip(-10);
+    let speed = Number(speedInput.value);
 
-    if(e.code==="Space")
-        videoToggle();
+
+    if(speed < 0.1)
+        speed = 0.1;
+
+
+    if(speed > 99)
+        speed = 99;
+
+
+    speedInput.value = speed;
+
+    player.playbackRate = speed;
+
+    speedText.textContent = speed + "x";
 
 });
+
+
+
+// Keyboard
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.code==="Space"){
+        e.preventDefault();
+        togglePlay();
+    }
+
+
+    if(e.key==="ArrowRight")
+        player.currentTime += 10;
+
+
+    if(e.key==="ArrowLeft")
+        player.currentTime -= 10;
+
+});
+
 </script>
 
 </body>
