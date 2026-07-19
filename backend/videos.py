@@ -47,15 +47,6 @@ def insert(title: str, description: str):
     )
     return video_id
 
-#@dataclass
-#class Video():
-#    id: str = ""
-#    upload_date: int = 0
-#    title: str = ""
-#    description: str = ""
-#    views: int = 0
-#    likes: int = 0
-
 def search(query: str, limit: int = 1):
     return database.query(
         QUERY_VIDEOS,
