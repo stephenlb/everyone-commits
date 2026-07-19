@@ -68,8 +68,8 @@ def get_video_file(video_id: str):
 def stream(video_id: str):
     filename = get_video_file(video_id)
     with open(filename, mode='rb') as handle:
-        chunk = handle.read(CHUNK_SIZE)
         while True:
+            chunk = handle.read(CHUNK_SIZE)
             if not chunk: break
             yield chunk
     

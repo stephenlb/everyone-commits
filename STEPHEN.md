@@ -25,6 +25,7 @@ DUCKDB
 
 # Potential Names
 ## BlumTube
+## PubTube
 
 We are building a YouTube App where you can upload videos,
 and viewers can watch your videos.
