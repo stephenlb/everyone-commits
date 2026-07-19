@@ -1,18 +1,18 @@
 <h1>Video Stream Test</h1>
-<video id=player autoplay=true controls=true></video>
+<video id="player" autoplay controls></video>
 
-<script>(async _ => {
-    let origin = 'http://0.0.0.0:8000';
-    let player = document.getElementById('player');
-    let url = `${origin}/video?query=Beep&limit=2`;
-    let response = await fetch(url);
-    let videos = await response.json();
-    let video_id = videos['videos'][0]['id'];
+<script>
+(async () => {
+    const origin = window.location.origin;
+    const player = document.getElementById("player");
 
-    let video_url = `${origin}/stream?video_id=${video_id}`;
-    player.src = video_url;
+    const response = await fetch(`${origin}/video?query=Beep&limit=2`);
+    const videos = await response.json();
+    const videoId = videos.videos[0].id;
 
-    console.log(response);
+    player.src = `${origin}/stream?video_id=${encodeURIComponent(videoId)}`;
+
+    console.log(origin);
     console.log(videos);
-    console.log(video_id);
-})();</script>
+})();
+</script>
