@@ -1,0 +1,20 @@
+@description('parUserName is the username for the Virtual Machine.')
+param parUserName string = 'admin'
+
+@description('parPassword is the password for the Virtual Machine.')
+param parPassword string = 'P@ssw0rd1234!'
+
+resource resWindowsVM 'Microsoft.Compute/virtualMachines@2020-12-01' = {
+  name: 'my-vm'
+  location: 'westeurope'
+  properties: {
+    hardwareProfile: {
+      vmSize: 'Standard_A2_v2'
+    }
+    osProfile: {
+      computerName: 'computerName'
+      adminUsername: parUserName
+      adminPassword: parPassword
+    }
+... truncated for length purposes ...
+}
