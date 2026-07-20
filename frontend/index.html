@@ -22,15 +22,8 @@ html, body {
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-
     font-family: Inter, "Segoe UI", Arial, sans-serif;
     color: white;
-
     overflow: hidden;
     position: relative;
 }
@@ -58,43 +51,49 @@ body::after {
 }
 
 
-h1 {
-    margin: 0;
 
-    padding: 8px 20px;
+/* Vertical Shorts feed */
 
-    font-size: clamp(1rem,2.5vw,1.8rem);
-
-    border: 2px solid rgba(255,255,255,.2);
-    border-radius: var(--radius);
-
-    background: rgba(0,0,0,.35);
-
-    backdrop-filter: blur(12px);
-}
-
-
-
-/* Main video area */
-
-#player-container {
-
-    width: min(92vw, 1200px);
-    height: min(75vh, 800px);
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    gap: 8px;
-}
-
-
-
-video {
+#feed {
 
     width: 100%;
-    height: 100%;
+    height: 100dvh;
+
+    overflow-y: scroll;
+
+    scroll-snap-type: y mandatory;
+
+    /* Hide scrollbar but keep scrolling. */
+    scrollbar-width: none;
+}
+
+#feed::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+.slide {
+
+    position: relative;
+
+    width: 100%;
+    height: 100dvh;
+
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+.slide video {
+
+    width: min(92vw, 500px);
+    height: min(92dvh, 900px);
 
     background: #000;
 
@@ -104,29 +103,118 @@ video {
     object-fit: contain;
 
     box-shadow: 0 20px 50px rgba(0,0,0,.55);
+
+    cursor: pointer;
 }
 
 
 
-/* Controls */
+.slide .caption {
 
-#custom-controls {
+    position: absolute;
 
-    width: 100%;
-    flex-shrink: 0;
+    left: 50%;
+    bottom: 6dvh;
+    transform: translateX(-50%);
 
-    height: 42px;
-    max-height: 42px;
+    max-width: min(88vw, 460px);
+
+    padding: 8px 16px;
+
+    font-size: 14px;
+
+    background: rgba(0,0,0,.55);
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: var(--radius);
+
+    backdrop-filter: blur(10px);
+
+    pointer-events: none;
+}
+
+
+
+/* Play + mute overlay badge */
+
+.slide .badge {
+
+    position: absolute;
+
+    top: 4dvh;
+    right: calc(50% - min(46vw, 250px) + 12px);
+
+    display: flex;
+    gap: 6px;
+}
+
+
+.slide .badge button {
+
+    width: 36px;
+    height: 36px;
 
     display: flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 6px;
+    background: rgba(0,0,0,.6);
 
-    padding: 5px 8px;
+    color: white;
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    backdrop-filter: blur(10px);
+}
+
+
+
+#feed-status {
+
+    height: 12dvh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    scroll-snap-align: start;
+
+    font-size: 13px;
+    color: rgba(255,255,255,.7);
+}
+
+
+
+/* Upload — floating bar */
+
+#upload-panel {
+
+    position: fixed;
+
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    z-index: 10;
+
+    width: min(92vw, 700px);
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 12px;
 
     background: rgba(0,0,0,.75);
 
+    border: 2px solid rgba(255,255,255,.2);
     border-radius: var(--radius);
 
     backdrop-filter: blur(10px);
@@ -134,103 +222,61 @@ video {
 
 
 
-#custom-controls button {
-
-    width: 32px;
-    height: 32px;
-
-    flex-shrink: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: #111;
-
-    color: white;
-
-    border: 1px solid rgba(255,255,255,.2);
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-size: 14px;
-}
-
-
-
-#videoSeek {
+#upload-panel input[type="text"] {
 
     flex: 1;
+    min-width: 120px;
 
-    min-width: 30px;
-
-    height: 4px;
-}
-
-
-
-#speedText {
-
-    min-width: 28px;
-
-    text-align: center;
-
-    font-size: 12px;
-}
-
-
-
-#speedContainer {
-
-    position: relative;
-
-}
-
-
-
-#speedMenu {
-
-    display: none;
-
-    position: absolute;
-
-    right: 0;
-
-    bottom: 40px;
-
-    width: 120px;
-
-    padding: 8px;
-
-    background: #111;
-
-    border: 1px solid rgba(255,255,255,.2);
-
-    border-radius: 12px;
-
-    box-shadow: 0 10px 30px rgba(0,0,0,.5);
-}
-
-
-
-#speedMenu input {
-
-    width: 100%;
-
-    height: 30px;
+    height: 34px;
 
     background: #000;
 
     color: white;
 
     border: 1px solid rgba(255,255,255,.2);
-
     border-radius: 8px;
 
-    padding: 5px;
+    padding: 5px 10px;
+}
 
+
+
+#upload-panel button {
+
+    height: 34px;
+
+    padding: 0 16px;
+
+    background: #111;
+
+    color: white;
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 8px;
+
+    cursor: pointer;
+}
+
+
+
+#upload-panel button:disabled {
+
+    opacity: .5;
+
+    cursor: default;
+}
+
+
+
+#uploadStatus {
+
+    width: 100%;
+
+    min-height: 16px;
+
+    font-size: 12px;
+
+    color: #ffcf80;
 }
 
 </style>
@@ -240,53 +286,37 @@ video {
 <body>
 
 
-<h1>Video Stream Test</h1>
+<div id="upload-panel">
+
+    <input id="uploadTitle"
+           type="text"
+           placeholder="Title">
 
 
-<div id="player-container">
-
-    <video id="player" autoplay></video>
-
-
-    <div id="custom-controls">
-
-        <button id="playButton">▶</button>
+    <input id="uploadDescription"
+           type="text"
+           placeholder="Description">
 
 
-        <input id="videoSeek"
-               type="range"
-               min="0"
-               value="0"
-               step="0.1">
+    <input id="uploadFile"
+           type="file"
+           accept="video/*">
 
 
-        <div id="speedContainer">
-
-            <button id="speedButton">
-                ◷
-            </button>
+    <button id="uploadButton">
+        Upload
+    </button>
 
 
-            <div id="speedMenu">
+    <div id="uploadStatus"></div>
 
-                <input id="speedInput"
-                       type="number"
-                       min="0.1"
-                       max="99"
-                       step="0.1"
-                       value="1">
-
-            </div>
-
-        </div>
+</div>
 
 
-        <span id="speedText">
-            1x
-        </span>
 
+<div id="feed">
 
-    </div>
+    <div id="feed-status">Loading…</div>
 
 </div>
 
@@ -294,163 +324,300 @@ video {
 
 <script>
 
-const player = document.getElementById("player");
-const seek = document.getElementById("videoSeek");
+const feed = document.getElementById("feed");
+const feedStatus = document.getElementById("feed-status");
 
-const playButton = document.getElementById("playButton");
 
-const speedButton = document.getElementById("speedButton");
-const speedMenu = document.getElementById("speedMenu");
-
-const speedInput = document.getElementById("speedInput");
-const speedText = document.getElementById("speedText");
+const origin =
+    window.location.protocol === "file:"
+    ? "http://0.0.0.0:8000"
+    : window.location.origin;
 
 
 
-(async()=>{
+/* ---- Feed state ---- */
 
-    const origin =
-        window.location.protocol === "file:"
-        ? "http://0.0.0.0:8000"
-        : window.location.origin;
+const PAGE_SIZE = 5;
+
+// Tracks which video ids are already on screen — guards against
+// duplicates (e.g. a fresh upload prepended before its page loads).
+const loadedIds = new Set();
+
+let offset = 0;          // real DB offset into /videos.
+let loading = false;
+let exhausted = false;   // backend returned nothing new — stop asking.
+
+// Feed muted by default so autoplay is allowed; tap unmutes.
+let muted = true;
 
 
+
+/* Play the centered video, pause the rest. */
+const playObserver = new IntersectionObserver((entries)=>{
+
+    for(const entry of entries) {
+
+        const video = entry.target;
+
+        if(entry.isIntersecting) {
+            video.play().catch(()=>{});
+        } else {
+            video.pause();
+        }
+    }
+
+}, { threshold: 0.6 });
+
+
+
+/* Attach a real src only when a slide gets close to the viewport. */
+const loadObserver = new IntersectionObserver((entries)=>{
+
+    for(const entry of entries) {
+
+        if(!entry.isIntersecting) continue;
+
+        const video = entry.target;
+
+        if(!video.src && video.dataset.src) {
+            video.src = video.dataset.src;
+        }
+
+        loadObserver.unobserve(video);
+    }
+
+}, { rootMargin: "200% 0px" });
+
+
+
+/* Load more when the status sentinel scrolls into view. */
+const sentinelObserver = new IntersectionObserver((entries)=>{
+
+    if(entries[0].isIntersecting) loadMore();
+
+}, { rootMargin: "300% 0px" });
+
+sentinelObserver.observe(feedStatus);
+
+
+
+function makeSlide(video) {
+
+    const slide = document.createElement("div");
+    slide.className = "slide";
+
+
+    const el = document.createElement("video");
+
+    // A direct src (e.g. the preset fallback) loads immediately; feed
+    // videos defer to dataset.src until loadObserver attaches them.
+    if(video.src)
+        el.src = video.src;
+    else
+        el.dataset.src =
+            `${origin}/stream?video_id=${encodeURIComponent(video.id)}`;
+
+    el.muted = muted;
+    el.loop = true;
+    el.playsInline = true;
+    el.preload = "metadata";
+
+    // Tap the video to toggle play/pause.
+    el.addEventListener("click", ()=>{
+        if(el.paused) el.play().catch(()=>{});
+        else el.pause();
+    });
+
+
+    const badge = document.createElement("div");
+    badge.className = "badge";
+
+    const muteButton = document.createElement("button");
+    muteButton.textContent = muted ? "🔇" : "🔊";
+    muteButton.addEventListener("click", ()=>toggleMute());
+    badge.appendChild(muteButton);
+
+
+    const caption = document.createElement("div");
+    caption.className = "caption";
+    caption.textContent = video.title || "Untitled";
+
+
+    slide.append(el, badge, caption);
+
+
+    playObserver.observe(el);
+    loadObserver.observe(el);
+
+    return slide;
+}
+
+
+
+function toggleMute() {
+
+    muted = !muted;
+
+    for(const el of feed.querySelectorAll("video"))
+        el.muted = muted;
+
+    for(const button of feed.querySelectorAll(".badge button"))
+        button.textContent = muted ? "🔇" : "🔊";
+}
+
+
+
+async function loadMore() {
+
+    if(loading || exhausted) return;
+
+    loading = true;
+
+
+    // Paged, newest-first list from the backend.
     try {
 
         const response =
-            await fetch(`${origin}/video?query=Beep&limit=2`);
+            await fetch(`${origin}/videos?limit=${PAGE_SIZE}&offset=${offset}`);
+
+        if(!response.ok)
+            throw new Error(`Feed failed (${response.status})`);
 
 
         const data =
             await response.json();
 
 
-        player.src =
-            `${origin}/stream?video_id=${encodeURIComponent(
-                data.videos[0].id
-            )}`;
+        const page = data.videos || [];
 
+
+        offset += page.length;
+
+
+        for(const video of page) {
+            if(loadedIds.has(video.id)) continue;
+            loadedIds.add(video.id);
+            feed.insertBefore(makeSlide(video), feedStatus);
+        }
+
+
+        // A short (or empty) page means we've reached the end of the table.
+        if(page.length < PAGE_SIZE) {
+            exhausted = true;
+            feedStatus.textContent =
+                loadedIds.size ? "You're all caught up." : "No videos yet.";
+        } else {
+            feedStatus.textContent = "Loading…";
+        }
 
     } catch(error) {
 
         console.error(error);
 
-        // Backend unreachable — fall back to a preset video from disk.
-        player.src = "../data/videos/019f7674-d289-7eb1-90a9-4d4136739cfb.mp4";
-        document.body.insertAdjacentHTML(
-            "beforeend",
-            `<p style="color:#ffcf80">Backend unavailable — playing preset video.</p>`
-        );
+        // Backend unreachable — seed the feed with a preset video once.
+        if(loadedIds.size === 0) {
+            const slide = makeSlide({
+                src: "../data/videos/019f7674-d289-7eb1-90a9-4d4136739cfb.mp4",
+                title: "Preset video",
+            });
+            feed.insertBefore(slide, feedStatus);
+        }
 
+        exhausted = true;
+        feedStatus.textContent = "Backend unavailable — playing preset video.";
+
+    } finally {
+
+        loading = false;
     }
-
-})();
-
-
-
-function togglePlay(){
-
-    if(player.paused)
-        player.play();
-
-    else
-        player.pause();
-
 }
 
 
-playButton.onclick = togglePlay;
+
+loadMore();
 
 
 
-player.addEventListener("play",()=>{
-    playButton.textContent = "⏸";
-});
+/* ---- Upload ---- */
 
-
-player.addEventListener("pause",()=>{
-    playButton.textContent = "▶";
-});
-
-
-
-player.addEventListener("loadedmetadata",()=>{
-
-    seek.max = player.duration;
-
-});
+const uploadTitle = document.getElementById("uploadTitle");
+const uploadDescription = document.getElementById("uploadDescription");
+const uploadFile = document.getElementById("uploadFile");
+const uploadButton = document.getElementById("uploadButton");
+const uploadStatus = document.getElementById("uploadStatus");
 
 
 
-player.addEventListener("timeupdate",()=>{
+uploadButton.onclick = async ()=>{
 
-    seek.value = player.currentTime;
+    const file = uploadFile.files[0];
 
-});
-
-
-
-seek.addEventListener("input",()=>{
-
-    player.currentTime = seek.value;
-
-});
-
-
-
-speedButton.onclick = ()=>{
-
-    speedMenu.style.display =
-        speedMenu.style.display === "block"
-        ? "none"
-        : "block";
-
-};
-
-
-
-speedInput.addEventListener("input",()=>{
-
-    let value = Number(speedInput.value);
-
-
-    if(value < 0.1)
-        value = 0.1;
-
-
-    if(value > 99)
-        value = 99;
-
-
-    speedInput.value = value;
-
-    player.playbackRate = value;
-
-    speedText.textContent = value + "x";
-
-});
-
-
-
-document.addEventListener("keydown",(e)=>{
-
-    if(e.code === "Space") {
-
-        e.preventDefault();
-
-        togglePlay();
-
+    if(!file) {
+        uploadStatus.textContent = "Choose a video file first.";
+        return;
     }
 
 
-    if(e.key === "ArrowRight")
-        player.currentTime += 10;
+    // /upload takes title + description as query params and the
+    // file in the body, then hands it to videos.upload_cdn() which
+    // sends it to PubNub Files via send_file().
+    const params = new URLSearchParams({
+        title: uploadTitle.value,
+        description: uploadDescription.value,
+    });
 
 
-    if(e.key === "ArrowLeft")
-        player.currentTime -= 10;
+    const body = new FormData();
+    body.append("file", file);
 
-});
+
+    uploadButton.disabled = true;
+    uploadStatus.textContent = "Uploading to PubNub…";
+
+
+    try {
+
+        const response =
+            await fetch(`${origin}/upload?${params}`, {
+                method: "POST",
+                body,
+            });
+
+
+        if(!response.ok)
+            throw new Error(`Upload failed (${response.status})`);
+
+
+        const data =
+            await response.json();
+
+
+        uploadStatus.textContent =
+            `Uploaded "${data.title}" — added to feed.`;
+
+
+        // Prepend the freshly uploaded video and scroll to it.
+        if(!loadedIds.has(data.id)) {
+            loadedIds.add(data.id);
+
+            const slide = makeSlide({ id: data.id, title: data.title });
+            feed.insertBefore(slide, feed.firstChild);
+
+            slide.scrollIntoView({ behavior: "smooth" });
+        }
+
+    } catch(error) {
+
+        console.error(error);
+        uploadStatus.textContent = error.message;
+
+    } finally {
+
+        uploadButton.disabled = false;
+
+    }
+
+};
 
 </script>
 
