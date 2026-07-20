@@ -1,5 +1,4 @@
 import videos
-import database
 from fastapi import FastAPI, UploadFile
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -37,7 +36,8 @@ async def upload(
     file: UploadFile,
 ):
     video_id = videos.insert(title, description)
-    new_name, original = videos.upload(video_id, file)
+    #new_name, original = videos.upload(video_id, file)
+    new_name, original = videos.upload_cdn(video_id, file)
     return {
         "id": video_id,
         "title": title,

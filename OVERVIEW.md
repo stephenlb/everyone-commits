@@ -5,6 +5,7 @@
 # We are Building YouTube
 
 ## Monday Plan
+ - Files API
  - Infinite scroll
  - Video skipping forward 
  - 10x fast forward
@@ -29,16 +30,30 @@ MEMCACHED
 DUCKDB
 
 # Potential Names
+## BlumClip
+## Ticky Tocky
+## PubTube
+## PeepTube
+## Blump
+## BlumMe
+## BlumYou
+## Blimp
+## BlumTok
+## tikiBloom
+## PubHub or PubNub PubSbu
+## PubStream
 ## BlumTube
 ## PubTube
+## Vidoes APP
+## Vidapp
+## ?????
 
 We are building a YouTube App where you can upload videos,
 and viewers can watch your videos.
 
 ## Stack
-Python FastAPI UVICorn Docerk
+Python FastAPI UVICorn Docker
 Postgresql 
-
 
 ## Task Order
  - Friday 

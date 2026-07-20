@@ -5,6 +5,18 @@ from fastapi import UploadFile
 import database
 import uuid_utils as uuid
 
+## CDN
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
+from pubnub.exceptions import PubNubException
+
+pnconfig = PNConfiguration()
+pnconfig.subscribe_key = 'demo'  # Replace with your subscribe key
+pnconfig.publish_key = 'demo'    # Replace with your publish key
+pnconfig.user_id = 'python-server'
+
+pubnub = PubNub(pnconfig)
+
 CHUNK_SIZE = 1024 * 1024  # 1MB per chunk
 PWD = Path(__file__).parent.parent
 
@@ -63,7 +75,7 @@ def stream(video_id: str):
             chunk = handle.read(CHUNK_SIZE)
             if not chunk: break
             yield chunk
-    
+
 UPLOAD_DIRECTORY = Path('data/videos')
 def upload(video_id: str, file: UploadFile):
     filename = get_video_file(video_id)
@@ -73,3 +85,22 @@ def upload(video_id: str, file: UploadFile):
 
     return filename, file.filename
 
+def upload_cdn(video_id: str, file: UploadFile):
+    filename = get_video_file(video_id)
+
+    try:
+        response = pubnub.send_file() \
+            .channel('new_videos') \
+            .file_name(str(filename)) \
+            .message({"upload":"Success"}) \
+            .file_object(file.file) \
+            .sync()
+        print("File sent:", response.result.file_id)
+        return filename, response.result.file_id
+
+    except PubNubException as e:
+        print(f"Error: {e}")
+    except FileNotFoundError:
+        print(f"File not found: {filenameh}")
+
+    return False, False
